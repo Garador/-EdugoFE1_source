@@ -8,7 +8,7 @@ import { ITodoEditForm } from '../../../../types/todo';
 import moment from 'moment';
 
 @observer
-export class AddTodoComponent extends React.Component<{ providerInstance: TodoProvider }> {
+export class EditTodoComponent extends React.Component<{ providerInstance: TodoProvider }> {
 
     state: { formData: ITodoEditForm } = {
         formData: {
@@ -22,29 +22,50 @@ export class AddTodoComponent extends React.Component<{ providerInstance: TodoPr
 
     constructor(props: any) {
         super(props);
-        this.provider = this.props.providerInstance;
-        this.cancelRowAdd = this.cancelRowAdd.bind(this);
-        this.startAddingNewRow = this.startAddingNewRow.bind(this);
-        this.addNewTodo = this.addNewTodo.bind(this);
+        this.finishRowEdit = this.finishRowEdit.bind(this);
+        this.updateTodo = this.updateTodo.bind(this);
         this.updateFormData = this.updateFormData.bind(this);
+        this.provider = this.props.providerInstance;
     }
 
-    cancelRowAdd() {
-        this.provider.setIsAddingNewRow(false);
+    setData(){
+        if(!this.provider.editingTodo){
+            return;
+        }
+        let formData:ITodoEditForm = {
+            title: this.provider.editingTodo.title,
+            description: this.provider.editingTodo.description,
+            finished: this.provider.editingTodo.finished,
+            first_sighting_at: this.provider.getInputDate(this.provider.editingTodo.first_sighting_at)
+        };
+        this.setState({
+            formData
+        });
     }
 
-    startAddingNewRow() {
-        this.provider.setIsAddingNewRow(true)
+    componentDidMount(){
+        this.setData();
     }
 
-    addNewTodo(ev: SyntheticEvent) {
+    finishRowEdit() {
+        if(this.props.providerInstance.editingTodo){
+            let id:any = this.props.providerInstance.editingTodo.id;
+            this.props.providerInstance.setEditingTodo(id, false);
+        }
+        
+    }
+
+    updateTodo(ev: SyntheticEvent) {
         ev.preventDefault();
-        this.provider.makeTodo(this.state.formData);
-        this.cancelRowAdd();
+        if(this.props.providerInstance.editingTodo){
+            let id:any = this.props.providerInstance.editingTodo.id;
+            this.props.providerInstance.updateTodo(id, this.state.formData);
+            this.finishRowEdit();
+        }
     }
 
     updateFormData(ev:any){
-        let {name, value} = ev.target;
+        const {name, value} = ev.target;
         this.setState((state:any) => {
             state.formData[name] = value;
             return state;
@@ -54,12 +75,9 @@ export class AddTodoComponent extends React.Component<{ providerInstance: TodoPr
     render() {
         return (
             <div>
-                <Container>
-                    <Button color="primary" variant="contained" onClick={this.startAddingNewRow}>Add New Row</Button>
-                </Container>
                 <Modal
-                    open={this.provider.isAddingTodo}
-                    onClose={this.cancelRowAdd}
+                    open={this.props.providerInstance.isEditingTodo}
+                    onClose={()=>{this.finishRowEdit()}}
                     aria-labelledby="simple-modal-title"
                     aria-describedby="simple-modal-description"
                     className="style-container"
@@ -79,13 +97,13 @@ export class AddTodoComponent extends React.Component<{ providerInstance: TodoPr
                                 <LabelOutlined />
                             </Avatar>
                             <Typography component="h1" variant="h5">
-                                Add New Animal Record
+                                Editing your todo
                             </Typography>
                             <form style={{
                                 width: '100%', // Fix IE 11 issue.
                                 marginTop: "1em",
                             }} noValidate
-                                onSubmit={this.addNewTodo}>
+                                onSubmit={this.updateTodo}>
                                 <TextField
                                     variant="outlined"
                                     margin="normal"
@@ -135,8 +153,9 @@ export class AddTodoComponent extends React.Component<{ providerInstance: TodoPr
                                     style={{
                                         margin: "1em 0em 2em",
                                     }}
+                                    onClick={this.updateTodo}
                                 >
-                                    Add New Todo
+                                    Edit Todo
                                 </Button>
                                 <Button
                                     type="submit"
@@ -146,7 +165,7 @@ export class AddTodoComponent extends React.Component<{ providerInstance: TodoPr
                                     style={{
                                         margin: "0em 0em 1em",
                                     }}
-                                    onClick={this.cancelRowAdd}
+                                    onClick={()=>{this.finishRowEdit()}}
                                 >
                                     Cancel
                                 </Button>
