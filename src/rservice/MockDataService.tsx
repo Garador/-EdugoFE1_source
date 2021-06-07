@@ -35,7 +35,7 @@ export class MockDataService extends React.Component<{TODO_PROVIDER: TodoProvide
             this.notificationProvider.addNotification("Mock elements loaded", "Mock elements have been loaded correctly", ENotificationType.INFO);
         })
         .catch(()=>{
-            this.setState({loadedMocks: false, loading: false});
+            this.setState({loadedMocks: false, loading: false, error: true});
             this.notificationProvider.addNotification("Error loading mock data", "There was an error loading the mock element.", ENotificationType.ERROR);
         })
     }

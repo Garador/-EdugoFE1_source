@@ -6,6 +6,7 @@ import "./styles/style.scss";
 import { LabelOutlined } from '@material-ui/icons';
 import { ITodoEditForm } from '../../../../types/todo';
 import moment from 'moment';
+import "./index.scss";
 
 @observer
 export class AddTodoComponent extends React.Component<{ providerInstance: TodoProvider }> {
@@ -66,26 +67,14 @@ export class AddTodoComponent extends React.Component<{ providerInstance: TodoPr
                 >
                     <Container component="main" maxWidth="xs">
                         <CssBaseline />
-                        <div style={{
-                            marginTop: "8em",
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}>
-                            <Avatar style={{
-                                margin: "1em",
-                                backgroundColor: "black",
-                            }}>
+                        <div className="base-container">
+                            <Avatar className="avatar">
                                 <LabelOutlined />
                             </Avatar>
                             <Typography component="h1" variant="h5">
                                 Add New Animal Record
                             </Typography>
-                            <form style={{
-                                width: '100%', // Fix IE 11 issue.
-                                marginTop: "1em",
-                            }} noValidate
-                                onSubmit={this.addNewTodo}>
+                            <form noValidate onSubmit={this.addNewTodo}>
                                 <TextField
                                     variant="outlined"
                                     margin="normal"
@@ -132,9 +121,7 @@ export class AddTodoComponent extends React.Component<{ providerInstance: TodoPr
                                     fullWidth
                                     variant="contained"
                                     color="primary"
-                                    style={{
-                                        margin: "1em 0em 2em",
-                                    }}
+                                    className="add"
                                 >
                                     Add New Todo
                                 </Button>
@@ -143,9 +130,7 @@ export class AddTodoComponent extends React.Component<{ providerInstance: TodoPr
                                     fullWidth
                                     variant="contained"
                                     color="primary"
-                                    style={{
-                                        margin: "0em 0em 1em",
-                                    }}
+                                    className="cancel"
                                     onClick={this.cancelRowAdd}
                                 >
                                     Cancel

@@ -5,6 +5,7 @@ import { TodoProvider } from '../../../../providers/Todo/Todo.provider';
 import "./styles/style.scss";
 import { LabelOutlined } from '@material-ui/icons';
 import { ITodoEditForm } from '../../../../types/todo';
+import "./index.scss";
 
 @observer
 export class FullViewTodoComponent extends React.Component<{ providerInstance: TodoProvider }> {
@@ -44,18 +45,8 @@ export class FullViewTodoComponent extends React.Component<{ providerInstance: T
                 >
                     <Container component="main" maxWidth="xs">
                         <CssBaseline />
-                        <div style={{
-                            marginTop: "8em",
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            overflowY:'scroll',
-                            maxHeight:'calc(100vh - 8em)'
-                        }}>
-                            <Avatar style={{
-                                margin: "1em",
-                                backgroundColor: "black",
-                            }}>
+                        <div className="base-div">
+                            <Avatar className="avatar">
                                 <LabelOutlined />
                             </Avatar>
                             <Typography component="h1" variant="h5">
@@ -80,10 +71,8 @@ export class FullViewTodoComponent extends React.Component<{ providerInstance: T
                                 fullWidth
                                 variant="contained"
                                 color="primary"
-                                style={{
-                                    margin: "0em 0em 1em",
-                                }}
                                 onClick={this.finishRowFullDisplayView}
+                                className="close"
                             >
                                 Close
                             </Button>

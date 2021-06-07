@@ -9,6 +9,7 @@ import { EditTodoComponent } from './editTodo';
 import { FullViewTodoComponent } from './fullViewTodo';
 import { NotificationProvider } from '../../../providers/Notification/Notification.provider';
 import { ENotificationType } from '../../../types/notification';
+import "./index.container.scss";
 
 @inject("TODO_PROVIDER", "NOTF_PROVIDER")
 @observer
@@ -91,20 +92,14 @@ export class IndexPageContainer extends React.Component<any> {
                                     </TableCell>
                                     <TableCell>
                                         <DeleteOutlined
-                                            style={{margin:"0.5em",
-                                            cursor:'pointer'
-                                        }}
+                                            className="action-icon"
                                             onClick={() => { this.deleteTodo(todo.id) }} />
                                         <EditOutlined
-                                            style={{margin:"0.5em",
-                                            cursor:'pointer'
-                                        }}
+                                            className="action-icon"
                                             onClick={() => { this.provider.setEditingTodo(todo.id, true) }}
                                         />
                                         <Pageview
-                                            style={{margin:"0.5em",
-                                            cursor:'pointer'
-                                        }}
+                                            className="action-icon"
                                             onClick={() => { this.provider.setFullViewTodo(todo.id, true) }}
                                         />
                                     </TableCell>

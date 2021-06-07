@@ -9,13 +9,6 @@ export class TodoObservable {
     @observable
     description: string = "";
     id:string = Math.floor(Math.random()*1e10).toString(32);
-    //Whether this store is being edited.
-    /*@observable
-    editing: boolean = false;
-    //Whether this element is being displayed in full view
-    @observable
-    fullView: boolean = false;
-    */
     @observable
     first_sighting_at: Date = new Date();
 

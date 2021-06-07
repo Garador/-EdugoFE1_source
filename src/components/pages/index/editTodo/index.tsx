@@ -8,6 +8,7 @@ import { ITodoEditForm } from '../../../../types/todo';
 import moment from 'moment';
 import { NotificationProvider } from '../../../../providers/Notification/Notification.provider';
 import { ENotificationType } from '../../../../types/notification';
+import "./index.scss";
 
 @observer
 export class EditTodoComponent extends React.Component<{ providerInstance: TodoProvider, notificationProvider: NotificationProvider }> {
@@ -89,25 +90,14 @@ export class EditTodoComponent extends React.Component<{ providerInstance: TodoP
                 >
                     <Container component="main" maxWidth="xs">
                         <CssBaseline />
-                        <div style={{
-                            marginTop: "8em",
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}>
-                            <Avatar style={{
-                                margin: "1em",
-                                backgroundColor: "black",
-                            }}>
+                        <div className="base-container">
+                            <Avatar className="avatar">
                                 <LabelOutlined />
                             </Avatar>
                             <Typography component="h1" variant="h5">
                                 Editing your todo
                             </Typography>
-                            <form style={{
-                                width: '100%', // Fix IE 11 issue.
-                                marginTop: "1em",
-                            }} noValidate
+                            <form noValidate
                                 onSubmit={this.updateTodo}>
                                 <TextField
                                     variant="outlined"
@@ -155,9 +145,7 @@ export class EditTodoComponent extends React.Component<{ providerInstance: TodoP
                                     fullWidth
                                     variant="contained"
                                     color="primary"
-                                    style={{
-                                        margin: "1em 0em 2em",
-                                    }}
+                                    className="add"
                                     onClick={this.updateTodo}
                                 >
                                     Update Record
@@ -167,9 +155,7 @@ export class EditTodoComponent extends React.Component<{ providerInstance: TodoP
                                     fullWidth
                                     variant="contained"
                                     color="primary"
-                                    style={{
-                                        margin: "0em 0em 1em",
-                                    }}
+                                    className="cancel"
                                     onClick={()=>{this.finishRowEdit()}}
                                 >
                                     Cancel
