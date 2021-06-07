@@ -1,5 +1,5 @@
-import { action, computed } from "mobx";
-import { TodoObservable, TodoStore } from "../../stores/TodoStore";
+import { action, computed, observable } from "mobx";
+import { TodoObservable, TodoStore } from "../../stores/TodoStore/Todo.store";
 import { ITodoEditForm, ITodoImportElement } from "../../types/todo";
 import * as axios from 'axios'
 import moment from "moment";
@@ -7,8 +7,16 @@ import moment from "moment";
 export class TodoProvider {
     store: TodoStore;
     
+    @observable
+    editing?: TodoObservable;
+
+    @observable
+    fullView?: TodoObservable;
+    
     constructor(store: TodoStore){
         this.store = store;
+        this.editing = <any> null;
+        this.fullView = <any> null;
     }
 
     @action
@@ -56,7 +64,11 @@ export class TodoProvider {
     setEditingTodo(todoId: string, editing: boolean){
         let todo = this.store.todos.find(element => element.id === todoId);
         if(todo){
-            todo.editing = editing;
+            if(editing){
+                this.editing = todo;
+            }else{
+                this.editing = <any>null;
+            }
         }else{
             throw new Error("Invalid check: todo not found.");
         }
@@ -66,7 +78,11 @@ export class TodoProvider {
     setFullViewTodo(todoId: string, fullView:boolean){
         let todo = this.store.todos.find(element => element.id === todoId);
         if(todo){
-            todo.fullView = fullView;
+            if(fullView){
+                this.fullView = todo;
+            }else{
+                this.fullView = <any>null;
+            }
         }else{
             throw new Error("Invalid check: todo not found.");
         }
@@ -74,31 +90,24 @@ export class TodoProvider {
 
     @computed
     get isAddingTodo(){
-        return this.store.addingNewRow;
+        return !!this.store.addingNewRow;
     }
 
     @computed
     get isEditingTodo(){
         //return false;
-        return !!this.todos.find(todo => todo.editing);
+        return !!this.editing;
     }
 
     @computed
     get isTodoInFullView(){
         //return false;
-        return !!this.todos.find(todo => todo.fullView);
-    }
-
-    @computed
-    get fullViewTodo(){
-        return this.todos.find(todo => todo.fullView);
-        //return false;
+        return !!this.fullView;
     }
 
     @computed
     get editingTodo(){
-        return this.todos.find(todo => todo.editing);
-        //return false;
+        return this.editing;
     }
 
     @computed
@@ -112,7 +121,6 @@ export class TodoProvider {
         const newTodos = data.map(element => {
             let todoObservable = new TodoObservable();
             todoObservable.description = element.description;
-            todoObservable.editing = false;
             todoObservable.finished = element.tagged;
             todoObservable.first_sighting_at = new Date(element.first_sighting_at);
             todoObservable.title = element.name;

@@ -1,11 +1,10 @@
 import { Avatar, Button, Container, CssBaseline, Modal, TextField, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
-import React, { SyntheticEvent } from 'react';
-import { TodoProvider } from '../../../../providers/TodoProvider';
+import React from 'react';
+import { TodoProvider } from '../../../../providers/Todo/Todo.provider';
 import "./styles/style.scss";
 import { LabelOutlined } from '@material-ui/icons';
 import { ITodoEditForm } from '../../../../types/todo';
-import moment from 'moment';
 
 @observer
 export class FullViewTodoComponent extends React.Component<{ providerInstance: TodoProvider }> {
@@ -27,9 +26,9 @@ export class FullViewTodoComponent extends React.Component<{ providerInstance: T
     }
 
     finishRowFullDisplayView() {
-        if(this.props.providerInstance.editingTodo){
-            let id:any = this.props.providerInstance.editingTodo.id;
-            this.props.providerInstance.setFullViewTodo(id, false);
+        if(this.provider.fullView){
+            let id:any = this.provider.fullView.id;
+            this.provider.setFullViewTodo(id, false);
         }
     }
 
@@ -37,7 +36,7 @@ export class FullViewTodoComponent extends React.Component<{ providerInstance: T
         return (
             <div>
                 <Modal
-                    open={this.props.providerInstance.isEditingTodo}
+                    open={!!this.provider.fullView}
                     onClose={()=>{this.finishRowFullDisplayView()}}
                     aria-labelledby="simple-modal-title"
                     aria-describedby="simple-modal-description"
@@ -50,6 +49,8 @@ export class FullViewTodoComponent extends React.Component<{ providerInstance: T
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
+                            overflowY:'scroll',
+                            maxHeight:'calc(100vh - 8em)'
                         }}>
                             <Avatar style={{
                                 margin: "1em",
@@ -58,22 +59,34 @@ export class FullViewTodoComponent extends React.Component<{ providerInstance: T
                                 <LabelOutlined />
                             </Avatar>
                             <Typography component="h1" variant="h5">
-                                Displaying Your Todo
+                                Displaying Record
                             </Typography>
                             <Typography variant="h3">
-                                {this.provider.fullViewTodo?.title}
+                                {this.provider.fullView?.title}
                             </Typography>
                             <Typography paragraph>
-                                {this.provider.fullViewTodo?.description}
+                                {this.provider.fullView?.description}
                             </Typography>
                             <Typography paragraph>
-                                First sighting at: 
-                                {this.provider.fullViewTodo?.first_sighting_at}
+                                First sighting at: &nbsp;
+                                {this.provider.fullView?.displayFS}
                             </Typography>
                             <Typography paragraph>
                                 Is tagged?
-                                {this.provider.fullViewTodo?.finished}
+                                {this.provider.fullView?.finished ? " YES" : " NO"}
                             </Typography>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                style={{
+                                    margin: "0em 0em 1em",
+                                }}
+                                onClick={this.finishRowFullDisplayView}
+                            >
+                                Close
+                            </Button>
                         </div>
                     </Container>
                 </Modal>

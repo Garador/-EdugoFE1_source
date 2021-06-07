@@ -1,14 +1,16 @@
 import { Avatar, Button, Container, CssBaseline, Modal, TextField, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React, { SyntheticEvent } from 'react';
-import { TodoProvider } from '../../../../providers/TodoProvider';
+import { TodoProvider } from '../../../../providers/Todo/Todo.provider';
 import "./styles/style.scss";
 import { LabelOutlined } from '@material-ui/icons';
 import { ITodoEditForm } from '../../../../types/todo';
 import moment from 'moment';
+import { NotificationProvider } from '../../../../providers/Notification/Notification.provider';
+import { ENotificationType } from '../../../../types/notification';
 
 @observer
-export class EditTodoComponent extends React.Component<{ providerInstance: TodoProvider }> {
+export class EditTodoComponent extends React.Component<{ providerInstance: TodoProvider, notificationProvider: NotificationProvider }> {
 
     state: { formData: ITodoEditForm } = {
         formData: {
@@ -19,6 +21,7 @@ export class EditTodoComponent extends React.Component<{ providerInstance: TodoP
         }
     }
     provider: TodoProvider;
+    notfProvider: NotificationProvider;
 
     constructor(props: any) {
         super(props);
@@ -26,6 +29,7 @@ export class EditTodoComponent extends React.Component<{ providerInstance: TodoP
         this.updateTodo = this.updateTodo.bind(this);
         this.updateFormData = this.updateFormData.bind(this);
         this.provider = this.props.providerInstance;
+        this.notfProvider = this.props.notificationProvider;
     }
 
     setData(){
@@ -61,6 +65,7 @@ export class EditTodoComponent extends React.Component<{ providerInstance: TodoP
             let id:any = this.props.providerInstance.editingTodo.id;
             this.props.providerInstance.updateTodo(id, this.state.formData);
             this.finishRowEdit();
+            this.notfProvider.addNotification("Updated Record", "The record selected has been updated", ENotificationType.SUCCESS);
         }
     }
 
@@ -155,7 +160,7 @@ export class EditTodoComponent extends React.Component<{ providerInstance: TodoP
                                     }}
                                     onClick={this.updateTodo}
                                 >
-                                    Edit Todo
+                                    Update Record
                                 </Button>
                                 <Button
                                     type="submit"

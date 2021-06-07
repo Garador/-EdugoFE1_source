@@ -1,7 +1,7 @@
 import { Avatar, Button, Container, CssBaseline, Modal, TextField, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React, { SyntheticEvent } from 'react';
-import { TodoProvider } from '../../../../providers/TodoProvider';
+import { TodoProvider } from '../../../../providers/Todo/Todo.provider';
 import "./styles/style.scss";
 import { LabelOutlined } from '@material-ui/icons';
 import { ITodoEditForm } from '../../../../types/todo';

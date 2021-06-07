@@ -1,7 +1,6 @@
 import { action, computed, observable } from "mobx";
 import moment from 'moment';
 import { ITodoEditForm } from "../../types/todo";
-
 export class TodoObservable {
     @observable
     title: string = "";
@@ -11,11 +10,12 @@ export class TodoObservable {
     description: string = "";
     id:string = Math.floor(Math.random()*1e10).toString(32);
     //Whether this store is being edited.
-    @observable
+    /*@observable
     editing: boolean = false;
     //Whether this element is being displayed in full view
     @observable
     fullView: boolean = false;
+    */
     @observable
     first_sighting_at: Date = new Date();
 

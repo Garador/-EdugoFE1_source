@@ -1,40 +1,60 @@
 import { inject, observer } from 'mobx-react';
-import React from 'react';
-import {Button, Checkbox, Container, Table, TableBody, TableCell, TableFooter, TableHead, TableRow, Typography} from '@material-ui/core'
-import { TodoProvider } from '../../../providers/TodoProvider';
+import React, { SyntheticEvent } from 'react';
+import { Button, Checkbox, Container, MenuItem, Select, Table, TableBody, TableCell, TableFooter, TableHead, TableRow, Typography } from '@material-ui/core'
+import { TodoProvider } from '../../../providers/Todo/Todo.provider';
 import { AddTodoComponent } from './addTodo';
-import { TodoObservable } from '../../../stores/TodoStore';
-import {Pageview, DeleteOutlined, EditOutlined} from '@material-ui/icons'
+import { TodoObservable } from '../../../stores/TodoStore/Todo.store';
+import { Pageview, DeleteOutlined, EditOutlined } from '@material-ui/icons'
 import { EditTodoComponent } from './editTodo';
 import { FullViewTodoComponent } from './fullViewTodo';
+import { NotificationProvider } from '../../../providers/Notification/Notification.provider';
+import { ENotificationType } from '../../../types/notification';
 
-@inject("TODO_PROVIDER")
+@inject("TODO_PROVIDER", "NOTF_PROVIDER")
 @observer
-export class IndexPageContainer extends React.Component <any> {
+export class IndexPageContainer extends React.Component<any> {
     provider: TodoProvider;
-
-    constructor(props:any){
-        super(props);
-        this.provider = this.props.TODO_PROVIDER;
+    notfProvider: NotificationProvider;
+    state = {
+        elements: 5
     }
 
-    render(){
+    constructor(props: any) {
+        super(props);
+        this.provider = this.props.TODO_PROVIDER;
+        this.notfProvider = this.props.NOTF_PROVIDER;
+        this.handleLimitResults = this.handleLimitResults.bind(this);
+        this.deleteTodo = this.deleteTodo.bind(this);
+    }
+
+    handleLimitResults(ev: any){
+        this.setState({
+            elements: ev.target.value
+        })
+    }
+
+    deleteTodo(id:string){
+        this.provider.deleteTodo(id);
+        this.notfProvider.addNotification("Element removed successfully.", "Element removed successfully.", ENotificationType.SUCCESS);
+    }
+
+    render() {
         return (
             <Container>
-                <Typography variant="h1">Hello World!</Typography>
-                <div>
+                <Typography variant="h3" gutterBottom>List of animals to tag</Typography>
+                <Container>
                     <AddTodoComponent providerInstance={this.provider}/>
                     {
-                        this.provider.isEditingTodo ? 
-                            <EditTodoComponent providerInstance={this.provider}/>
-                        : <></>
+                        this.provider.isEditingTodo ?
+                            <EditTodoComponent providerInstance={this.provider} notificationProvider={this.notfProvider} />
+                            : <></>
                     }
                     {
-                        this.provider.isTodoInFullView ? 
-                            <FullViewTodoComponent providerInstance={this.provider}/>
-                        : <></>
+                        this.provider.isTodoInFullView ?
+                            <FullViewTodoComponent providerInstance={this.provider} />
+                            : <></>
                     }
-                </div>
+                </Container>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -54,7 +74,8 @@ export class IndexPageContainer extends React.Component <any> {
                     </TableHead>
                     <TableBody>
                         {
-                            this.provider.todos.map((todo: TodoObservable) => (
+                            this.provider.todos.slice(0, this.state.elements)
+                            .map((todo: TodoObservable) => (
                                 <TableRow key={todo.id}>
                                     <TableCell>
                                         {todo.displayFS}
@@ -62,7 +83,7 @@ export class IndexPageContainer extends React.Component <any> {
                                     <TableCell>
                                         <Checkbox
                                             checked={todo.finished}
-                                            onChange={()=>this.provider.checkTodo(todo.id)}
+                                            onChange={() => this.provider.checkTodo(todo.id)}
                                         />
                                     </TableCell>
                                     <TableCell>
@@ -70,18 +91,44 @@ export class IndexPageContainer extends React.Component <any> {
                                     </TableCell>
                                     <TableCell>
                                         <DeleteOutlined
-                                        onClick={()=>{this.provider.deleteTodo(todo.id)}}/>
+                                            style={{margin:"0.5em",
+                                            cursor:'pointer'
+                                        }}
+                                            onClick={() => { this.deleteTodo(todo.id) }} />
                                         <EditOutlined
-                                        onClick={()=>{this.provider.setEditingTodo(todo.id, true)}}
+                                            style={{margin:"0.5em",
+                                            cursor:'pointer'
+                                        }}
+                                            onClick={() => { this.provider.setEditingTodo(todo.id, true) }}
                                         />
                                         <Pageview
-                                        onClick={()=>{this.provider.setFullViewTodo(todo.id, true)}}
+                                            style={{margin:"0.5em",
+                                            cursor:'pointer'
+                                        }}
+                                            onClick={() => { this.provider.setFullViewTodo(todo.id, true) }}
                                         />
                                     </TableCell>
                                 </TableRow>
                             ))
                         }
                     </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <TableCell colSpan={2}>
+                                <Select
+                                    labelId="results-ammount"
+                                    id="select-results-ammount"
+                                    value={this.state.elements}
+                                    onChange={this.handleLimitResults}
+                                >
+                                    <MenuItem value={5}>5</MenuItem>
+                                    <MenuItem value={10}>10</MenuItem>
+                                    <MenuItem value={25}>25</MenuItem>
+                                    <MenuItem value={300}>200+</MenuItem>
+                                </Select>
+                            </TableCell>
+                        </TableRow>
+                    </TableFooter>
                 </Table>
             </Container>
         )
