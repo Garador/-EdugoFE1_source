@@ -2,11 +2,14 @@ import { Avatar, Button, Container, CssBaseline, Modal, TextField, Typography } 
 import { observer } from 'mobx-react';
 import React from 'react';
 import { TodoProvider } from '../../../../providers/Todo/Todo.provider';
-import "./styles/style.scss";
 import { LabelOutlined } from '@material-ui/icons';
 import { ITodoEditForm } from '../../../../types/todo';
-import "./index.scss";
+import "./styles/index.scss";
+import "./styles/style.scss";
 
+/**
+ * Handles the full view for the components.
+ */
 @observer
 export class FullViewTodoComponent extends React.Component<{ providerInstance: TodoProvider }> {
 
@@ -26,6 +29,9 @@ export class FullViewTodoComponent extends React.Component<{ providerInstance: T
         this.provider = this.props.providerInstance;
     }
 
+    /**
+     * Finished the full display
+     */
     finishRowFullDisplayView() {
         if(this.provider.fullView){
             let id:any = this.provider.fullView.id;

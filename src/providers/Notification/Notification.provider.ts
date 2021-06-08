@@ -2,7 +2,13 @@ import { action, computed, observable } from "mobx";
 import { NotificationStore, Notification } from "../../stores/Notification/Notification.store";
 import { ENotificationType } from "../../types/notification";
 
+/**
+ * Handles the notification functions.
+ */
 export class NotificationProvider {
+    /**
+     * The notification store.
+     */
     store: NotificationStore;
     
     constructor(store: NotificationStore){
@@ -10,6 +16,13 @@ export class NotificationProvider {
     }
 
 
+    /**
+     * Adds a new notification.
+     * @param title The notification title.
+     * @param description The notification description.
+     * @param type The type of notification.
+     * @param durationMillis The duration in millis.
+     */
     @action
     addNotification(title: string, description: string, type: ENotificationType, durationMillis:number = 3000){
         let notification = new Notification();
@@ -24,6 +37,10 @@ export class NotificationProvider {
         }, durationMillis);
     }
 
+    /**
+     * Shows a particular notification (marks it as beign shown)
+     * @param notificationID The notification to show
+     */
     @action
     showNotification(notificationID: string){
         const notification = this.store.notifications.find(notification => notification.id === notificationID);
@@ -32,6 +49,10 @@ export class NotificationProvider {
         }
     }
 
+    /**
+     * Hides the specific notification (marks it as not showing)
+     * @param notificationID The notification to hide
+     */
     @action
     hideNotification(notificationID: string){
         const notification = this.store.notifications.find(notification => notification.id === notificationID);
@@ -40,11 +61,18 @@ export class NotificationProvider {
         }
     }
 
+    /**
+     * Removes the selected notification
+     * @param notificationID The notification ID
+     */
     @action
     removeNotification(notificationID: string){
         this.store.notifications = this.store.notifications.filter(notification => notification.id !== notificationID);
     }
 
+    /**
+     * Shows the specific notification.
+     */
     @computed
     get shownNotifications(){
         return this.store.notifications.filter(element => element.isShowing);

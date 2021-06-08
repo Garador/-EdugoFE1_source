@@ -4,7 +4,10 @@ import { NotificationProvider } from '../providers/Notification/Notification.pro
 import { TodoProvider } from '../providers/Todo/Todo.provider';
 import { ENotificationType } from '../types/notification';
 
-
+/**
+ * Handles the loading for the mock data. If the data can't load, it simply
+ * won't show the children elements.
+ */
 export class MockDataService extends React.Component<{TODO_PROVIDER: TodoProvider, NOTF_PROVIDER: NotificationProvider}> {
 
     provider: TodoProvider;
@@ -29,6 +32,7 @@ export class MockDataService extends React.Component<{TODO_PROVIDER: TodoProvide
         this.setState({
             loading: true
         })
+        //Loads the mock todos.
         this.provider.loadMockTodos()
         .then(()=>{
             this.setState({loadedMocks: true, loading: false})

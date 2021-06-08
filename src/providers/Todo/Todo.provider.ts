@@ -4,7 +4,13 @@ import { ITodoEditForm, ITodoImportElement } from "../../types/todo";
 import * as axios from 'axios'
 import moment from "moment";
 
+/**
+ * Handles the todo operations.
+ */
 export class TodoProvider {
+    /**
+     * The store that holds the todos.
+     */
     store: TodoStore;
     
     @observable
@@ -19,6 +25,10 @@ export class TodoProvider {
         this.fullView = <any> null;
     }
 
+    /**
+     * Creates and adds new todo.
+     * @param formData The data to be used to create the new todo.
+     */
     @action
     makeTodo(formData: ITodoEditForm):void{
         formData.first_sighting_at = this.parseInputDate(formData.first_sighting_at+"");
@@ -31,6 +41,11 @@ export class TodoProvider {
         this.store.todos.push(newTodo);
     }
 
+    /**
+     * Updates the todo.
+     * @param todoId The todo to edit.
+     * @param formData The form data.
+     */
     @action
     updateTodo(todoId:string, formData: ITodoEditForm):void{
         const todo = this.store.todos.find(todo => todoId === todo.id);
@@ -46,16 +61,28 @@ export class TodoProvider {
         }
     }
 
+    /**
+     *  Deletes the selected todo.
+     * @param todoId The todo ID
+     */
     @action
     deleteTodo(todoId:string):void{
         this.store.todos = this.todos.filter(todo => todo.id !== todoId);
     }
 
+    /**
+     *  Deletes the selected todos.
+     * @param todoIds The todo IDs
+     */
     @action
     deleteSeveralTodos(todoIds:string[]):void{
         this.store.todos = this.todos.filter(todo => todoIds.indexOf(todo.id) < 0);
     }
 
+    /**
+     *  Checks the selected todo.
+     * @param todoId The todo ID
+     */
     @action
     checkTodo(todoId: string){
         const todo = this.store.todos.find(todo => todoId === todo.id);
@@ -66,6 +93,10 @@ export class TodoProvider {
         }
     }
 
+    /**
+     * Checks the selected todos.
+     * @param todoIds The todo IDs
+     */
     @action
     checkSeveralTodos(todoIds: string[]){
         try{
@@ -78,11 +109,20 @@ export class TodoProvider {
         }
     }
 
+    /**
+     * Sets whether a new row is being added or not
+     * @param isAdding Whether it's adding
+     */
     @action
     setIsAddingNewRow(isAdding:boolean){
         this.store.addingNewRow = isAdding;
     }
 
+    /**
+     * Sets the editing todo.
+     * @param todoId The todo ID
+     * @param editing Whether it's editing or not the ID
+     */
     @action
     setEditingTodo(todoId: string, editing: boolean){
         let todo = this.store.todos.find(element => element.id === todoId);
@@ -97,6 +137,11 @@ export class TodoProvider {
         }
     }
 
+    /**
+     * Sets the selected todo as beign edited.
+     * @param todoId The todo ID
+     * @param fullView Whether it's on full view
+     */
     @action
     setFullViewTodo(todoId: string, fullView:boolean){
         let todo = this.store.todos.find(element => element.id === todoId);
@@ -111,33 +156,52 @@ export class TodoProvider {
         }
     }
 
+    /**
+     * If it's currently adding a new todo
+     */
     @computed
     get isAddingTodo(){
         return !!this.store.addingNewRow;
     }
 
+    /**
+     * If it's currently editing a new todo
+     */
     @computed
     get isEditingTodo(){
         //return false;
         return !!this.editing;
     }
 
+    /**
+     * If it's currently showing a todo on full view
+     */
     @computed
     get isTodoInFullView(){
         //return false;
         return !!this.fullView;
     }
 
+    /**
+     * Gets the todo being edited
+     */
     @computed
     get editingTodo(){
         return this.editing;
     }
 
+
+    /**
+     * Gets the todos
+     */
     @computed
     get todos():TodoObservable[]{
         return this.store.todos;
     }
 
+    /**
+     * Loads the mock todos.
+     */
     @action
     async loadMockTodos(){
         const data:ITodoImportElement[] = (await axios.default.get("https://api.mockaroo.com/api/01522f30?count=200&key=ea89fca0")).data;
@@ -152,10 +216,21 @@ export class TodoProvider {
         this.store.todos.push(...newTodos);
     }
 
+    /**
+     * Formats the date on a specific way to adapt to be used on an input field
+     * of type date.
+     * @param dateValue The date
+     * @returns The formatted date
+     */
     getInputDate(dateValue: Date){
         return moment(dateValue).format("YYYY-MM-DD");
     }
 
+    /**
+     * Parses the date from an input field to a date object.
+     * @param dateValue The input field date value
+     * @returns The date.
+     */
     parseInputDate(dateValue: string){
         return moment(dateValue, "YYYY-MM-DD").toDate();
     }

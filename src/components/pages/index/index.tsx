@@ -8,7 +8,9 @@ import { NotificationProvider } from '../../../providers/Notification/Notificati
 import { NotificationStoreInstance } from '../../../stores/Notification/Notification.store';
 import { NotificationsComponent } from '../../shared/Notifications';
 
-
+/**
+ * Main page element.
+ */
 export class IndexPage extends React.Component<{path:any}> {
 
     todoProvider:TodoProvider;

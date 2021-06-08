@@ -9,10 +9,14 @@ import { EditTodoComponent } from './editTodo';
 import { FullViewTodoComponent } from './fullViewTodo';
 import { NotificationProvider } from '../../../providers/Notification/Notification.provider';
 import { ENotificationType } from '../../../types/notification';
-import "./index.container.scss";
 import { MultipleEdition } from './multipleEdition';
 import { ESelAction } from '../../../types/todo';
+import "./styles/index.container.scss";
 
+/**
+ * Handles the container and the injection of the different elements
+ * for the main page.
+ */
 @inject("TODO_PROVIDER", "NOTF_PROVIDER")
 @observer
 export class IndexPageContainer extends React.Component<any> {
@@ -33,26 +37,41 @@ export class IndexPageContainer extends React.Component<any> {
         this.handleSelectionAction = this.handleSelectionAction.bind(this);
     }
 
+    /**
+     * Handles the event of selecting a new result limit
+     */
     handleLimitResults(ev: any){
         this.setState({
             elements: ev.target.value
         })
     }
 
-    selectMultiple(checkboxId: string){
+    /**
+     * Selects / Deselects the todo on the list
+     * @param todoId The ID for the todo
+     */
+    selectMultiple(todoId: string){
         const {selected} = this.state;
-        if(selected[checkboxId]){
-            delete selected[checkboxId];
+        if(selected[todoId]){
+            delete selected[todoId];
         }else{
-            selected[checkboxId] = true;
+            selected[todoId] = true;
         }
         this.setState({selected});
     }
 
+    /**
+     * Handles the selection for the element.
+     * @param element The selected element
+     */
     handleSelectionAction(element: ESelAction){
         this.setState({selected: {}});
     }
 
+    /**
+     * Removes the selected todo.
+     * @param id The todo to be deleted
+     */
     deleteTodo(id:string){
         this.provider.deleteTodo(id);
         this.notfProvider.addNotification("Element removed successfully.", "Element removed successfully.", ENotificationType.SUCCESS);

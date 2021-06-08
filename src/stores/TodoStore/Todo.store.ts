@@ -1,5 +1,8 @@
 import { computed, observable } from "mobx";
 import moment from 'moment';
+/**
+ * Handles the Todo object.
+ */
 export class TodoObservable {
     @observable
     title: string = "";
@@ -7,6 +10,9 @@ export class TodoObservable {
     finished: boolean = false;
     @observable
     description: string = "";
+    /**
+     * This field is not meant to change, and thus, not be an observable.
+     */
     id:string = Math.floor(Math.random()*1e10).toString(32);
     @observable
     first_sighting_at: Date = new Date();
@@ -18,6 +24,9 @@ export class TodoObservable {
 
 }
 
+/**
+ * Handles the Todo store.
+ */
 export class TodoStore {
     @observable
     todos: TodoObservable[] = [];

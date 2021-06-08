@@ -1,3 +1,6 @@
+/**
+ * This is the payload for the form editing.
+ */
 export interface ITodoEditForm {
     title: string,
     description: string,
@@ -5,6 +8,9 @@ export interface ITodoEditForm {
     first_sighting_at: string | Date
 }
 
+/**
+ * This specifies the import format for the todos.
+ */
 export interface ITodoImportElement {
     id: number,
     name: string,
@@ -13,6 +19,9 @@ export interface ITodoImportElement {
     tagged: boolean
 }
 
+/**
+ * This specifies the action for the multiple selection component.
+ */
 export enum ESelAction {
     DELETED,
     CHECKED

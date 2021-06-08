@@ -6,7 +6,7 @@ import "./styles/style.scss";
 import { LabelOutlined } from '@material-ui/icons';
 import { ITodoEditForm } from '../../../../types/todo';
 import moment from 'moment';
-import "./index.scss";
+import "./styles/index.scss";
 
 @observer
 export class AddTodoComponent extends React.Component<{ providerInstance: TodoProvider }> {
@@ -30,20 +30,32 @@ export class AddTodoComponent extends React.Component<{ providerInstance: TodoPr
         this.updateFormData = this.updateFormData.bind(this);
     }
 
+    /**
+     * Cancels a row addition
+     */
     cancelRowAdd() {
         this.provider.setIsAddingNewRow(false);
     }
 
+    /**
+     * Adds a new row
+     */
     startAddingNewRow() {
         this.provider.setIsAddingNewRow(true)
     }
 
+    /**
+     * Adds a new todo
+     */
     addNewTodo(ev: SyntheticEvent) {
         ev.preventDefault();
         this.provider.makeTodo(this.state.formData);
         this.cancelRowAdd();
     }
 
+    /**
+     * Updates the form data
+     */
     updateFormData(ev:any){
         let {name, value} = ev.target;
         this.setState((state:any) => {

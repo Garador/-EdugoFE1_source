@@ -4,7 +4,7 @@ import { NotificationProvider } from '../../../../providers/Notification/Notific
 import { TodoProvider } from '../../../../providers/Todo/Todo.provider';
 import { ENotificationType } from '../../../../types/notification';
 import {ESelAction} from '../../../../types/todo'
-import "./index.scss";
+import "./styles/index.scss";
 
 interface IComponentProps {
     selected: {
@@ -15,6 +15,9 @@ interface IComponentProps {
     onActionPerformed: (action: ESelAction) => void
 };
 
+/**
+ * Handles the multiple edition functionality.
+ */
 export class MultipleEdition extends React.Component<IComponentProps> {
 
     todoProvider: TodoProvider;
@@ -29,10 +32,16 @@ export class MultipleEdition extends React.Component<IComponentProps> {
     }
 
 
+    /**
+     * Gets wheter it has or not elements
+     */
     hasElements() {
         return Object.keys(this.props.selected || {}).length > 0
     }
 
+    /**
+     * Removes the selected elements
+     */
     removeElements() {
         try{
             let keys = Object.keys(this.props.selected);
@@ -44,7 +53,9 @@ export class MultipleEdition extends React.Component<IComponentProps> {
         }
     }
 
-    //Mark elements as its opposite.
+    /**
+     * Mark elements as its opposite.
+     */
     checkElements(){
         try{
             let keys = Object.keys(this.props.selected);
@@ -56,15 +67,20 @@ export class MultipleEdition extends React.Component<IComponentProps> {
         }
     }
 
-
-    allAreFinished(){
+    /**
+     * Checks wheter all the elements are finished.
+     */
+    areAllFinished(){
         let keys = Object.keys(this.props.selected);
         return this.todoProvider.todos.filter(element => {
             return (keys.indexOf(element.id) > -1 && element.finished)
         }).length === keys.length;
     }
 
-    allAreUnFinished(){
+    /**
+     * Checks if all the elements are finished.
+     */
+    areAllInfunished(){
         let keys = Object.keys(this.props.selected);
         return this.todoProvider.todos.filter(element => {
             return (keys.indexOf(element.id) > -1 && !element.finished)
@@ -80,13 +96,13 @@ export class MultipleEdition extends React.Component<IComponentProps> {
                             Remove
                         </Button>
                         {
-                            this.allAreFinished() ?
+                            this.areAllFinished() ?
                             <Button onClick={this.checkElements} color="secondary" variant="contained">
                                 Untag All
                             </Button> : <> </>
                         }
                         {
-                            this.allAreUnFinished() ?
+                            this.areAllInfunished() ?
                             <Button onClick={this.checkElements} color="secondary" variant="contained">
                                 Tag All
                             </Button> : <> </>

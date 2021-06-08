@@ -5,11 +5,17 @@ import MuiAlert, { AlertProps, Color } from '@material-ui/lab/Alert';
 import { NotificationProvider } from '../../../providers/Notification/Notification.provider';
 import { ENotificationType } from '../../../types/notification';
 
-
+/**
+ * The alert element.
+ * @param props The props for this alert
+ */
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+/**
+ * Handles the notification logic.
+ */
 @inject("NOTF_PROVIDER")
 @observer
 export class NotificationsComponent extends React.Component<any> {
@@ -21,10 +27,16 @@ export class NotificationsComponent extends React.Component<any> {
         this.handleClose = this.handleClose.bind(this);
     }
 
+    /**
+     * Handles the closing for the notification.
+     */
     handleClose(notificationId: string){
         this.provider.hideNotification(notificationId);
     }
 
+    /**
+     * Gets the severity for the notification.
+     */
     getSeverity(notificationType: ENotificationType): any {
         const TYPES = {
             [ENotificationType.SUCCESS]: "success",

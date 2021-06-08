@@ -8,7 +8,7 @@ import { ITodoEditForm } from '../../../../types/todo';
 import moment from 'moment';
 import { NotificationProvider } from '../../../../providers/Notification/Notification.provider';
 import { ENotificationType } from '../../../../types/notification';
-import "./index.scss";
+import "./styles/index.scss";
 
 @observer
 export class EditTodoComponent extends React.Component<{ providerInstance: TodoProvider, notificationProvider: NotificationProvider }> {
