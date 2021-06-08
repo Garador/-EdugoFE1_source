@@ -21,11 +21,6 @@ export class Notification {
 export class NotificationStore {
     @observable
     notifications: Notification[] = [];
-
-    @computed
-    get shownNotifications(){
-        return this.notifications.filter(notification => notification.isShowing);
-    }
 }
 
 

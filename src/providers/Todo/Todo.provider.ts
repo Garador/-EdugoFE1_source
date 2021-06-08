@@ -22,7 +22,13 @@ export class TodoProvider {
     @action
     makeTodo(formData: ITodoEditForm):void{
         formData.first_sighting_at = this.parseInputDate(formData.first_sighting_at+"");
-        this.store.addNewTodo(formData);
+
+        let newTodo = new TodoObservable();
+        newTodo.title = formData.title;
+        newTodo.description = formData.description;
+        newTodo.finished = formData.finished;
+        newTodo.first_sighting_at = <Date> formData.first_sighting_at;
+        this.store.todos.push(newTodo);
     }
 
     @action
@@ -42,7 +48,12 @@ export class TodoProvider {
 
     @action
     deleteTodo(todoId:string):void{
-        this.store.removeTodo(todoId);
+        this.store.todos = this.todos.filter(todo => todo.id !== todoId);
+    }
+
+    @action
+    deleteSeveralTodos(todoIds:string[]):void{
+        this.store.todos = this.todos.filter(todo => todoIds.indexOf(todo.id) < 0);
     }
 
     @action
@@ -52,6 +63,18 @@ export class TodoProvider {
             todo.finished = !todo.finished;
         }else{
             throw new Error("Invalid check: todo not found.");
+        }
+    }
+
+    @action
+    checkSeveralTodos(todoIds: string[]){
+        try{
+            const selected = this.store.todos.filter(todo => todoIds.indexOf(todo.id) > -1);
+            selected.forEach(element => {
+                element.finished = !element.finished;
+            })
+        }catch(e){
+            throw new Error("Error checking several todos...");
         }
     }
 
@@ -126,7 +149,7 @@ export class TodoProvider {
             todoObservable.title = element.name;
             return todoObservable;
         })
-        this.store.addSeveral(newTodos);
+        this.store.todos.push(...newTodos);
     }
 
     getInputDate(dateValue: Date){

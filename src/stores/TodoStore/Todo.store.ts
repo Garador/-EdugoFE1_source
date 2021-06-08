@@ -1,6 +1,5 @@
-import { action, computed, observable } from "mobx";
+import { computed, observable } from "mobx";
 import moment from 'moment';
-import { ITodoEditForm } from "../../types/todo";
 export class TodoObservable {
     @observable
     title: string = "";
@@ -25,31 +24,6 @@ export class TodoStore {
 
     @observable
     addingNewRow: boolean = false;
-
-    @action
-    addNewTodo(data: ITodoEditForm){
-        let newTodo = new TodoObservable();
-        newTodo.title = data.title;
-        newTodo.description = data.description;
-        newTodo.finished = data.finished;
-        newTodo.first_sighting_at = <Date> data.first_sighting_at;
-        this.todos.push(newTodo);
-    }
-
-    @action
-    removeTodo(id: string){
-        this.todos = this.todos.filter(todo => todo.id !== id);
-    }
-
-    @action
-    markNewRow(isMakingNew:boolean){
-        this.addingNewRow = isMakingNew;
-    }
-
-    @action
-    addSeveral(todo: TodoObservable[]){
-        this.todos.push(...todo);
-    }
 }
 
 

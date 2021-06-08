@@ -12,3 +12,8 @@ export interface ITodoImportElement {
     first_sighting_at: string, //mm/dd/yyyy
     tagged: boolean
 }
+
+export enum ESelAction {
+    DELETED,
+    CHECKED
+}

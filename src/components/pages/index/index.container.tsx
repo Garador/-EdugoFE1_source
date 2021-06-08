@@ -10,6 +10,8 @@ import { FullViewTodoComponent } from './fullViewTodo';
 import { NotificationProvider } from '../../../providers/Notification/Notification.provider';
 import { ENotificationType } from '../../../types/notification';
 import "./index.container.scss";
+import { MultipleEdition } from './multipleEdition';
+import { ESelAction } from '../../../types/todo';
 
 @inject("TODO_PROVIDER", "NOTF_PROVIDER")
 @observer
@@ -17,7 +19,8 @@ export class IndexPageContainer extends React.Component<any> {
     provider: TodoProvider;
     notfProvider: NotificationProvider;
     state = {
-        elements: 5
+        elements: 5,
+        selected: {}
     }
 
     constructor(props: any) {
@@ -26,12 +29,28 @@ export class IndexPageContainer extends React.Component<any> {
         this.notfProvider = this.props.NOTF_PROVIDER;
         this.handleLimitResults = this.handleLimitResults.bind(this);
         this.deleteTodo = this.deleteTodo.bind(this);
+        this.selectMultiple = this.selectMultiple.bind(this);
+        this.handleSelectionAction = this.handleSelectionAction.bind(this);
     }
 
     handleLimitResults(ev: any){
         this.setState({
             elements: ev.target.value
         })
+    }
+
+    selectMultiple(checkboxId: string){
+        const {selected} = this.state;
+        if(selected[checkboxId]){
+            delete selected[checkboxId];
+        }else{
+            selected[checkboxId] = true;
+        }
+        this.setState({selected});
+    }
+
+    handleSelectionAction(element: ESelAction){
+        this.setState({selected: {}});
     }
 
     deleteTodo(id:string){
@@ -55,10 +74,14 @@ export class IndexPageContainer extends React.Component<any> {
                             <FullViewTodoComponent providerInstance={this.provider} />
                             : <></>
                     }
+                    {
+                        <MultipleEdition onActionPerformed={this.handleSelectionAction} selected={this.state.selected} todoProvider={this.provider} notificationProvider={this.notfProvider}/>
+                    }
                 </Container>
                 <Table>
                     <TableHead>
                         <TableRow>
+                            <TableCell></TableCell>
                             <TableCell>
                                 First Sighting
                             </TableCell>
@@ -78,6 +101,11 @@ export class IndexPageContainer extends React.Component<any> {
                             this.provider.todos.slice(0, this.state.elements)
                             .map((todo: TodoObservable) => (
                                 <TableRow key={todo.id}>
+                                    <TableCell>
+                                        <Checkbox
+                                            checked={this.state.selected[todo.id] || false}
+                                            onChange={() => this.selectMultiple(todo.id)}
+                                        /></TableCell>
                                     <TableCell>
                                         {todo.displayFS}
                                     </TableCell>
