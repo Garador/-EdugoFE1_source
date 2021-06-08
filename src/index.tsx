@@ -1,13 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { IndexPage } from "./components/pages/index";
-import { Router } from "@reach/router"
 
 
 ReactDOM.render(
-  <Router>
-    <IndexPage path="/"/>
-  </Router>,
+  <IndexPage path="/"/>,
   document.getElementById("root")
 );
 
